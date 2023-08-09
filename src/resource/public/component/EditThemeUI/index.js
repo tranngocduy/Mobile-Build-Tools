@@ -11,8 +11,10 @@ const EditThemeUI = ({ item, path, imageSize, setShowModal }) => {
   const [src, setSrc] = useState(null);
 
   const _apply = async () => {
+    const filePath = src.file.path?.replaceAll(' ', '\\ ');
+    
     await window.electron.ipcRenderer.invoke('exec.runScript', `cd ./src/resource && mkdir files`);
-    await window.electron.ipcRenderer.invoke('exec.runScript', `cp -R ${src.file.path} ./src/resource/files`);
+    await window.electron.ipcRenderer.invoke('exec.runScript', `cp -R ${filePath} ./src/resource/files`);
 
     await window.electron.ipcRenderer.invoke('fs.renameSync', `./src/resource/files/${src.file.name}`, `./src/resource/files/${item.name}`);
     await window.electron.ipcRenderer.invoke('exec.runScript', `cp -R ./src/resource/files/${item.name} ${path}`);
@@ -55,7 +57,7 @@ const EditThemeUI = ({ item, path, imageSize, setShowModal }) => {
           <div style={{ width: 1, marginRight: 16, marginLeft: 16, backgroundColor: '#e0e0e0' }} />
 
           <div style={{ flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ display: 'flex', width, height, backgroundColor: '#8DE1AF', padding: 8, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', width, height, backgroundColor: '#8DE1AF', padding: 8 }}>
               {!!src && <img src={`file://${src?.file?.path}?${Date.now()}`} style={{ flex: 1 }} />}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 12, fontSize: 16, color: '#000000', fontWeight: 'bold' }}>
