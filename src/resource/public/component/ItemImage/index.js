@@ -15,6 +15,8 @@ const ItemImage = ({ item, path, isMustSize }) => {
   const [src, setSrc] = useState(null);
 
   const _getIconFile = async event => {
+    document.getElementById('input-file-icon').value = "";
+
     const inputFiles = event?.nativeEvent?.target?.files?.[0] || event?.dataTransfer?.files?.[0];
 
     if (!inputFiles?.path) return;
@@ -22,8 +24,6 @@ const ItemImage = ({ item, path, isMustSize }) => {
     const size = await getImageDimensions(inputFiles?.path);
 
     setSrc({ size, file: inputFiles });
-
-    document.getElementById('input-file-icon').value = "";
   }
 
   const _openFolder = () => {
