@@ -10,7 +10,13 @@ const EditEnvConfig = ({ appInfo, path, readData, setModal }) => {
 
   const _apply = async () => {
     for (let i = 0; i < appInfo.length; i++) {
-      const _envSetting = appInfo[i]?.replaceAll?.(`:`, `\\:`)?.replaceAll(`'`, `\\'`)
+
+      let envFile = await window.electron.ipcRenderer.invoke('fs.readFileSync', path);
+      envFile = envFile?.split?.('\n')?.filter?.(el => el.includes?.(':'))?.filter(el => !el?.includes('{'))?.map(el => el.trim?.());
+
+      const index = envFile.findIndex(el => (el.split(':')[0] === appInfo[i].split(':')[0]));
+
+      const _envFile = envFile[index]?.replaceAll?.(`:`, `\\:`)?.replaceAll(`'`, `\\'`)
         ?.replaceAll(`/`, `\\/`)?.replaceAll(`.`, `\\.`)?.replaceAll(`"`, `\\"`)?.replaceAll(`,`, `\\,`);
 
       const _envScript = infoRef.current[i]?.replaceAll?.(`:`, `\\:`)?.replaceAll(`'`, `\\'`)
@@ -18,13 +24,11 @@ const EditEnvConfig = ({ appInfo, path, readData, setModal }) => {
 
       const result = await window.electron.ipcRenderer.invoke(
         'exec.runScript',
-        `find ${path} -type f -print0 | xargs -0 perl -pi -w -e "s/${_envSetting}/${_envScript}/g;"`
+        `find ${path} -type f -print0 | xargs -0 perl -pi -w -e "s/${_envFile}/${_envScript}/g;"`
       );
 
-      if (!!result?.data?.error) {
-        alert('Can not load setting, please check file ENV');
-        break;
-      }
+      if (!!result?.data?.error) alert('Can not load setting, please check file ENV');
+
     }
 
     await readData();
