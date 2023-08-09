@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Button } from '@mui/material';
 
+import EditThemeUI from '@app-component/EditThemeUI';
+
 const ItemThemeUI = ({ item, path }) => {
   const width = 120;
-  const height = (width * (item.size.height / item.size.width));
+  const imageSize = (item.size.height / item.size.width);
+  const height = (width * imageSize);
 
-  const _setShowModal = () => {
+  const [isShowModal, setShowModal] = useState(false);
 
-  }
+  const _setShowModal = () => setShowModal(!isShowModal);
 
   return (
     <div>
@@ -20,6 +23,8 @@ const ItemThemeUI = ({ item, path }) => {
         <span style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>{item?.name}</span>
         <Button variant="outlined" style={{ padding: 0, textTransform: 'none' }} onClick={_setShowModal}>Change</Button>
       </div>
+
+      {!!isShowModal && <EditThemeUI item={item} path={path} imageSize={imageSize} setShowModal={_setShowModal} />}
     </div>
   )
 
