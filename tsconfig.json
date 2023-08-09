@@ -16,6 +16,7 @@
     "outDir": ".erb/dll",
     "paths": {
       "@app-utils": ["resource/public/utils/index.js"],
+      "@app-instance/*": ["resource/public/instance/*/index.js"],
       "@app-component/*": ["resource/public/component/*/index.js"]
     }
   },

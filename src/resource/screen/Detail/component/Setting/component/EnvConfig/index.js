@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { IconButton } from '@mui/material';
 import { SettingsOutlined } from '@mui/icons-material';
 
-import { useAppStore } from '@app-utils';
+import { getKeyValueItem, useAppStore } from '@app-utils';
+
+import EditEnvConfig from '@app-instance/EditEnvConfig';
 
 const EnvConfig = () => {
   const appEnv = useAppStore(state => state.appEnv);
@@ -22,24 +24,17 @@ const EnvConfig = () => {
     let envFile = result?.split?.('\n')?.filter?.(el => el.includes?.(':'))?.filter(el => !el?.includes('{'));
     envFile = envFile?.filter?.(el => !listFilter.filter(i => !!el.includes(i))?.[0])?.map(el => el.trim?.());
 
-    const formatValue = envFile?.map?.(el => {
-      const _key = el?.split?.(':')[0];
-      const _value = el?.replace?.(`${_key}`, '')?.substr(1)
-        ?.replaceAll(',', '')?.replaceAll(`'`, '')?.replaceAll(`"`, '')?.trim();
-
-      return [_key, _value];
-    });
-
-    setData(formatValue);
+    setData(envFile);
   }
 
   useEffect(() => { _readData(); }, [appEnv]);
 
   const _renderItem = (item, index) => {
+    const [valueKey, valueItem] = getKeyValueItem(item);
     return (
       <div style={{ display: 'flex', flex: 1, flexDirection: 'row', alignItems: 'center' }} key={index}>
-        <div style={{ fontSize: 14, color: '#38383D', width: 230 }}>{item?.[0]}:</div>
-        <span style={{ marginLeft: 4, fontSize: 14, color: '#38383D', fontWeight: 'bold' }}>{item?.[1] || '---'}</span>
+        <div style={{ fontSize: 14, color: '#38383D', width: 230 }}>{valueKey}:</div>
+        <span style={{ marginLeft: 4, fontSize: 14, color: '#38383D', fontWeight: 'bold' }}>{valueItem || '---'}</span>
       </div>
     )
   }
@@ -54,6 +49,8 @@ const EnvConfig = () => {
           <IconButton size='small' onClick={_setModal}><SettingsOutlined color='primary' /></IconButton>
         </div>
       </div>
+
+      {!!openModal && <EditEnvConfig appInfo={data} path={path} readData={_readData} setModal={_setModal} />}
     </div>
   )
 
