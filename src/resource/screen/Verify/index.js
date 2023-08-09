@@ -14,7 +14,28 @@ const Verify = () => {
   };
 
   const _openFile = async event => {
-   
+    const KZ = `"name": "INVESTORZONE"`;
+
+    const _filePath = event?.nativeEvent?.target?.files?.[0]?.path;
+
+    if (!_filePath) return;
+
+    if (!_filePath?.endsWith?.('/package.json')) {
+      alert('Can not find package.json');
+      return;
+    }
+
+    const result = await window.electron.ipcRenderer.invoke('fs.readFileSync', _filePath);
+
+    if (!!result?.includes?.(KZ)) {
+      const projectPath = getFolderPath(_filePath);
+      useAppStore.getState().updatePath(projectPath);
+
+      navigate('/Detail');
+      return;
+    }
+
+    else alert('The project is not supported');
   }
 
   return (
