@@ -1,14 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
-import { Modal, Button, Paper, TextField } from '@mui/material';
+import { Modal, Button, Paper, TextField, CircularProgress } from '@mui/material';
 
-import { getKeyValueItem } from '@app-utils';
+import { getKeyValueItem, timeoutSleep } from '@app-utils';
 
 const EditEnvConfig = ({ appInfo, path, readData, setModal }) => {
+  const [isLoading, setLoading] = useState(false);
 
   const infoRef = useRef([...appInfo]);
 
   const _apply = async () => {
+    setLoading(true);
+
     for (let i = 0; i < appInfo.length; i++) {
 
       let envFile = await window.electron.ipcRenderer.invoke('fs.readFileSync', path);
@@ -22,6 +25,8 @@ const EditEnvConfig = ({ appInfo, path, readData, setModal }) => {
       const _envScript = infoRef.current[i]?.replaceAll?.(`:`, `\\:`)?.replaceAll(`'`, `\\'`)
         ?.replaceAll(`/`, `\\/`)?.replaceAll(`.`, `\\.`)?.replaceAll(`"`, `\\"`)?.replaceAll(`,`, `\\,`);;
 
+      await timeoutSleep(150);
+
       const result = await window.electron.ipcRenderer.invoke(
         'exec.runScript',
         `find ${path} -type f -print0 | xargs -0 perl -pi -w -e "s/${_envFile}/${_envScript}/g;"`
@@ -29,6 +34,9 @@ const EditEnvConfig = ({ appInfo, path, readData, setModal }) => {
 
       if (!!result?.data?.error) alert('Can not load setting, please check file ENV');
 
+      if (!!result?.data?.error) break;
+
+      if (!result?.data?.error) await timeoutSleep(150);
     }
 
     await readData();
@@ -61,7 +69,9 @@ const EditEnvConfig = ({ appInfo, path, readData, setModal }) => {
 
         <div style={{ display: 'flex', flex: 1, flexDirection: 'row', columnGap: 12, marginTop: 24, justifyContent: 'flex-end' }}>
           <Button variant="outlined" onClick={setModal}>Cancel</Button>
-          <Button variant="contained" onClick={_apply}>Apply</Button>
+          <Button disabled={!!isLoading} variant="contained" onClick={_apply}>
+            {!isLoading ? 'Apply' : <CircularProgress size={20} />}
+          </Button>
         </div>
 
       </Paper>
