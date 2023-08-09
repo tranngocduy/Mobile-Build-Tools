@@ -12,7 +12,7 @@ export const getFolderPath = filePath => {
 export const getImageDimensions = async url => {
   return new Promise(resolve => {
     const img = new Image();
-    img.onload = () => resolve({ with: img.width, height: img.height });
+    img.onload = () => resolve({ width: img.width, height: img.height });
     img.src = `file://${url}`;
   });
 }

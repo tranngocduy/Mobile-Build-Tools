@@ -4,6 +4,7 @@ import { Paper, Box, Tabs, Tab } from '@mui/material';
 
 import EnvSelect from './component/EnvSelect';
 import EnvConfig from './component/EnvConfig';
+import ThemeUI from './component/ThemeUI';
 
 const Setting = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -14,6 +15,8 @@ const Setting = () => {
 
   const memoEnvConfig = useMemo(() => <EnvConfig />, []);
 
+  const memoThemeUI = useMemo(() => <ThemeUI />, []);
+
   return (
     <Paper style={{ paddingRight: 16, paddingLeft: 16, paddingBottom: 16, borderRadius: 12 }}>
       {memoEnvSelect}
@@ -21,12 +24,13 @@ const Setting = () => {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={tabIndex} onChange={_handleChange} aria-label="basic tabs example">
           <Tab label="Environment Config" />
-          <Tab label="Image Theme" />
+          <Tab label="Theme UI" />
         </Tabs>
       </Box>
 
       <div style={{ marginTop: 24 }}>
         {(tabIndex === 0) && memoEnvConfig}
+        {(tabIndex === 1) && memoThemeUI}
       </div>
     </Paper>
   )
