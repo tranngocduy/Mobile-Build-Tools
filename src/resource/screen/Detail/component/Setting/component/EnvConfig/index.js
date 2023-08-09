@@ -21,7 +21,7 @@ const EnvConfig = () => {
     const listFilter = ['ENV:', 'APP_VERSION:', 'IS_MANUAL:'];
 
     let envFile = await window.electron.ipcRenderer.invoke('fs.readFileSync', path);
-    envFile = result?.split?.('\n')?.filter?.(el => el.includes?.(':'))?.filter(el => !el?.includes('{'));
+    envFile = envFile?.split?.('\n')?.filter?.(el => el.includes?.(':'))?.filter(el => !el?.includes('{'));
     envFile = envFile?.filter?.(el => !listFilter.filter(i => !!el.includes(i))?.[0])?.map(el => el.trim?.());
 
     setData(envFile);
