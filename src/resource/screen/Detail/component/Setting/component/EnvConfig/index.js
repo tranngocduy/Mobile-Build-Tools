@@ -5,7 +5,7 @@ import { SettingsOutlined } from '@mui/icons-material';
 
 import { getKeyValueItem, useAppStore } from '@app-utils';
 
-import EditEnvConfig from '@app-instance/EditEnvConfig';
+import EditEnvConfig from '@app-component/EditEnvConfig';
 
 const EnvConfig = () => {
   const appEnv = useAppStore(state => state.appEnv);
