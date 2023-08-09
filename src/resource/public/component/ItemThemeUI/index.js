@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Button } from '@mui/material';
 
-const ItemImage = ({ item, path }) => {
+const ItemThemeUI = ({ item, path }) => {
   const width = 120;
   const height = (width * (item.size.height / item.size.width));
 
@@ -25,4 +25,4 @@ const ItemImage = ({ item, path }) => {
 
 }
 
-export default ItemImage;
+export default ItemThemeUI;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { useAppStore, getImageDimensions } from '@app-utils';
 
-import ItemImage from '@app-component/ItemImage';
+import ItemThemeUI from '@app-component/ItemThemeUI';
 
 const ThemeUI = () => {
   const [items, setItems] = useState(null);
@@ -26,7 +26,7 @@ const ThemeUI = () => {
 
   useEffect(() => { _readData(); }, []);
 
-  const _renderItem = (item, index) => <ItemImage item={item} path={path} key={index} />;
+  const _renderItem = (item, index) => <ItemThemeUI item={item} path={path} key={index} />;
 
   return (
     <div style={{ display: 'flex', flex: 1, flexDirection: 'row', flexWrap: 'wrap', gap: 24 }}>
