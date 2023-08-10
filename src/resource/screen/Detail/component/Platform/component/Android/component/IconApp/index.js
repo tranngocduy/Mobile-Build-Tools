@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Button } from '@mui/material';
 
@@ -8,8 +8,6 @@ import ItemImage from '@app-component/ItemImage';
 
 const IconApp = () => {
   const appPath = useAppStore(state => state.appPath);
-
-  const [type, setType] = useState(null);
 
   const _store = { name: 'ic_launcher-playstore.png', size: { width: 512, height: 512 } }
 
@@ -23,12 +21,10 @@ const IconApp = () => {
 
   const _xxxhdpi = [['ic_launcher.png', '192 x 192'], ['ic_launcher_round.png', '192 x 192'], ['ic_launcher_foreground.png', '432 x 432']];
 
-  const _setShowModal = (value) => setType(type);
-
   const _renderItem = (path, value, index) => {
     const _size = value?.[1]?.split(' x ');
     const item = { name: value[0], size: { width: +_size[0], height: +_size[1] } };
-    return <ItemImage widthSize={40} isView={true} isHideTitle={true} isMustSize={true} item={item} path={path} key={index} />;
+    return <ItemImage widthSize={40} isHideTitle={true} isMustSize={true} item={item} path={path} key={index} />;
   }
 
   return (
@@ -48,7 +44,6 @@ const IconApp = () => {
                 {_hdpi.map(_renderItem.bind(this, `${appPath}/android/app/src/main/res/mipmap-hdpi`))}
               </div>
               <span style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>mipmap-hdpi</span>
-              <Button variant="outlined" style={{ padding: 0, textTransform: 'none' }} onClick={_setShowModal.bind(this, 'mipmap-hdpi')}>Change Icon</Button>
             </div>
 
 
@@ -57,7 +52,6 @@ const IconApp = () => {
                 {_mdpi.map(_renderItem.bind(this, `${appPath}/android/app/src/main/res/mipmap-mdpi`))}
               </div>
               <span style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>mipmap-mdpi</span>
-              <Button variant="outlined" style={{ padding: 0, textTransform: 'none' }} onClick={_setShowModal.bind(this, 'mipmap-mdpi')}>Change Icon</Button>
             </div>
           </div>
 
@@ -68,7 +62,6 @@ const IconApp = () => {
                 {_xhdpi.map(_renderItem.bind(this, `${appPath}/android/app/src/main/res/mipmap-xhdpi`))}
               </div>
               <span style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>mipmap-xhdpi</span>
-              <Button variant="outlined" style={{ padding: 0, textTransform: 'none' }} onClick={_setShowModal.bind(this, 'mipmap-xhdpi')}>Change Icon</Button>
             </div>
 
             <div style={{ display: 'flex', flex: 1, flexDirection: 'column', rowGap: 12 }}>
@@ -76,7 +69,6 @@ const IconApp = () => {
                 {_xxhdpi.map(_renderItem.bind(this, `${appPath}/android/app/src/main/res/mipmap-xxhdpi`))}
               </div>
               <span style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>mipmap-xxhdpi</span>
-              <Button variant="outlined" style={{ padding: 0, textTransform: 'none' }} onClick={_setShowModal.bind(this, 'mipmap-xxhdpi')}>Change Icon</Button>
             </div>
           </div>
 
@@ -86,7 +78,6 @@ const IconApp = () => {
                 {_xxxhdpi.map(_renderItem.bind(this, `${appPath}/android/app/src/main/res/mipmap-xxxhdpi`))}
               </div>
               <span style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>mipmap-xxxhdpi</span>
-              <Button variant="outlined" style={{ padding: 0, textTransform: 'none' }} onClick={_setShowModal.bind(this, 'mipmap-xxxhdpi')}>Change Icon</Button>
             </div>
 
             <div style={{ display: 'flex', flex: 1, flexDirection: 'column', rowGap: 12 }} />
