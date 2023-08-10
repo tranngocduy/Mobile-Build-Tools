@@ -5,7 +5,7 @@ import { SettingsOutlined } from '@mui/icons-material';
 
 import { useAppStore } from '@app-utils';
 
-import EditAndroid_BuildInfo from '@app-component/EditAndroid_BuildInfo';
+import Android_EditBuildInfo from '@app-component/Android_EditBuildInfo';
 
 const BuildInfo = () => {
   const appPath = useAppStore(state => state.appPath);
@@ -52,7 +52,7 @@ const BuildInfo = () => {
         <div style={{ fontSize: 14 }}>Bundle ID: <span style={{ fontWeight: 'bold' }}>{appInfo.bundleID}</span></div>
       </div>
 
-      {!!openModal && <EditAndroid_BuildInfo appInfo={appInfo} appPath={appPath} readData={_readData} setModal={_setModal} />}
+      {!!openModal && <Android_EditBuildInfo appInfo={appInfo} appPath={appPath} readData={_readData} setModal={_setModal} />}
     </div>
   )
 

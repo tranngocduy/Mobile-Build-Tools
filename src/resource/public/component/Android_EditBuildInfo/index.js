@@ -4,7 +4,7 @@ import { Modal, Button, Paper, TextField } from '@mui/material';
 
 import InputNumber from '@app-component/InputNumber';
 
-const EditAndroid_BuildInfo = ({ appInfo, appPath, readData, setModal }) => {
+const Android_EditBuildInfo = ({ appInfo, appPath, readData, setModal }) => {
   const appName = useRef(appInfo?.appName || '');
   const versionCode = useRef(appInfo?.versionCode || '');
   const versionName = useRef(appInfo?.versionName || '');
@@ -67,4 +67,4 @@ const EditAndroid_BuildInfo = ({ appInfo, appPath, readData, setModal }) => {
 
 }
 
-export default EditAndroid_BuildInfo;
+export default Android_EditBuildInfo;
