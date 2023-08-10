@@ -52,7 +52,7 @@ const PDFDocument = () => {
       </div>
 
       {!!filePDF && <ViewPDF pathReadPDF={filePDF} setFilePDF={_setFilePDF} />}
-      {!!isShowModal && <EditPDF items={items} readData={_readData} setShowModal={_setShowModal} setFilePDF={_setFilePDF} />}
+      {!!isShowModal && <EditPDF items={items} path={path} readData={_readData} setShowModal={_setShowModal} setFilePDF={_setFilePDF} />}
     </div>
   )
 
