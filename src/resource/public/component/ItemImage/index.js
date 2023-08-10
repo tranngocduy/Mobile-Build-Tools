@@ -6,10 +6,10 @@ import { getImageDimensions } from '@app-utils';
 
 import ViewImage from '@app-component/ViewImage';
 
-const ItemImage = ({ item, path, isMustSize }) => {
+const ItemImage = ({ item, path, widthSize, isView, isHideTitle, isMustSize }) => {
   const imageSize = (item.size.height / item.size.width);
 
-  const width = 120;
+  const width = (widthSize || 120);
   const height = (width * imageSize);
 
   const [src, setSrc] = useState(null);
@@ -32,11 +32,13 @@ const ItemImage = ({ item, path, isMustSize }) => {
   }
 
   const _onLoad = () => {
-    const holder = document.getElementById(`holder-${path}/${item?.name}`);
-    holder.ondragover = () => false;
-    holder.ondrop = event => {
-      event.preventDefault();
-      _getIconFile(event);
+    if (!isView) {
+      const holder = document.getElementById(`holder-${path}/${item?.name}`);
+      holder.ondragover = () => false;
+      holder.ondrop = event => {
+        event.preventDefault();
+        _getIconFile(event);
+      }
     }
   }
 
@@ -57,7 +59,7 @@ const ItemImage = ({ item, path, isMustSize }) => {
 
   return (
     <div>
-      <Button style={{ margin: 0, padding: 0, borderRadius: 10 }} onClick={_openFolder}>
+      <Button style={{ margin: 0, padding: 0, borderRadius: 10 }} disabled={!!isView} onClick={_openFolder}>
         <div style={{ width, height, padding: 8, borderWidth: 1, borderColor: 'rgba(0,0,0,0.25)', borderStyle: 'dashed', borderRadius: 10 }} id={`holder-${path}/${item?.name}`}>
           <img src={`file://${path}/${item.name}?${Date.now()}`} style={{ width, height, backgroundColor: '#8DE1AF' }} onLoad={_onLoad} />
           <input type='file' hidden={true} accept='image/*' id='input-file-icon' onChange={_getIconFile} />
@@ -65,7 +67,10 @@ const ItemImage = ({ item, path, isMustSize }) => {
       </Button>
 
       <div style={{ display: 'flex', flexDirection: 'column', marginTop: 8, rowGap: 8 }}>
-        <span style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>{item?.name}</span>
+        {!!isMustSize &&
+          <span style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>{item?.size?.width} x {item?.size?.height}</span>
+        }
+        {!isHideTitle && <span style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>{item?.name}</span>}
       </div>
 
       {!!src?.file?.path && <ViewImage item={item} src={src} path={path} imageSize={imageSize} apply={_apply} close={_close} />}
