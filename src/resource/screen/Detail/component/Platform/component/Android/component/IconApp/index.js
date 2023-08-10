@@ -29,7 +29,7 @@ const IconApp = () => {
 
   return (
     <div>
-      <h4>Icon</h4>
+      <h4>Icon App</h4>
       <div style={{ display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center' }}>
           <ItemImage widthSize={150} item={_store} path={`${appPath}/android/app/src/main`} isMustMatch={true} />

@@ -14,7 +14,7 @@ const ViewImage = ({ item, src, path, imageSize, isMustMatch, apply, close }) =>
 
   return (
     <Modal open={true} style={{ display: 'flex', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Paper elevation={3} style={{ padding: 16, paddingTop: 16 }}>
+      <Paper elevation={3} style={{ padding: 16, paddingTop: 16, maxWidth: '90%' }}>
 
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', rowGap: 8 }}>
@@ -34,23 +34,26 @@ const ViewImage = ({ item, src, path, imageSize, isMustMatch, apply, close }) =>
             <span style={{ fontSize: 16, color: '#000000', fontWeight: 'bold' }}>{src.size.width} x {src.size.height}</span>
             <span style={{ fontSize: 16, color: '#000000', fontWeight: 'bold' }}>{src?.file?.name}</span>
           </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 16, rowGap: 24 }}>
+            {!!isNameError &&
+              <Alert severity="error">
+                <div>Name of the current picture: <span style={{ fontWeight: 'bold' }}>{item?.name}</span></div>
+                <div>The name of the new image: <span style={{ fontWeight: 'bold' }}>{src?.file?.name}</span></div>
+                <div style={{ marginTop: 12, fontWeight: 'bold' }}>The name of the new image must match the name of the current picture</div>
+              </Alert>
+            }
+
+            {!!isSizeError &&
+              <Alert severity="error">
+                <div>Size of the current picture: <span style={{ fontWeight: 'bold' }}>{item?.size?.width} x {item?.size?.height}</span></div>
+                <div>The size of the new image: <span style={{ fontWeight: 'bold' }}>{src.size.width} x {src.size.height}</span></div>
+                <div style={{ marginTop: 12, fontWeight: 'bold' }}>The size of the new image must match the size of the current picture</div>
+              </Alert>
+            }
+          </div>
+
         </div>
-
-        {!!isNameError &&
-          <Alert severity="error" style={{ marginTop: 24 }}>
-            <div>Name of the current picture: <span style={{ fontWeight: 'bold' }}>{item?.name}</span></div>
-            <div>The name of the new image: <span style={{ fontWeight: 'bold' }}>{src?.file?.name}</span></div>
-            <div>The name of the new image must match the name of the current picture</div>
-          </Alert>
-        }
-
-        {!!isSizeError &&
-          <Alert severity="error" style={{ marginTop: 24 }}>
-            <div>Size of the current picture: <span style={{ fontWeight: 'bold' }}>{item?.size?.width} x {item?.size?.height}</span></div>
-            <div>The size of the new image: <span style={{ fontWeight: 'bold' }}>{src.size.width} x {src.size.height}</span></div>
-            <div>The size of the new image must match the size of the current picture</div>
-          </Alert>
-        }
 
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: 24, columnGap: 12 }}>
           <Button variant="outlined" style={{ textTransform: 'none' }} onClick={close}>Cancel</Button>
