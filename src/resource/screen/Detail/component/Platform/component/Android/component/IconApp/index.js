@@ -24,7 +24,7 @@ const IconApp = () => {
   const _renderItem = (path, value, index) => {
     const _size = value?.[1]?.split(' x ');
     const item = { name: value[0], size: { width: +_size[0], height: +_size[1] } };
-    return <ItemImage widthSize={40} isHideTitle={true} isMustSize={true} item={item} path={path} key={index} />;
+    return <ItemImage widthSize={40} isHideTitle={true} isMustMatch={true} item={item} path={path} key={index} />;
   }
 
   return (
@@ -32,7 +32,7 @@ const IconApp = () => {
       <h4>Icon</h4>
       <div style={{ display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center' }}>
-          <ItemImage widthSize={150} item={_store} path={`${appPath}/android/app/src/main`} isMustSize={true} />
+          <ItemImage widthSize={150} item={_store} path={`${appPath}/android/app/src/main`} isMustMatch={true} />
           <span style={{ marginTop: 8, fontSize: 14 }}>(Used to declare the application icon on the play store)</span>
         </div>
 
