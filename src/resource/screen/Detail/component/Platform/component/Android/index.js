@@ -5,6 +5,7 @@ import { Box, Tabs, Tab } from '@mui/material';
 import BuildInfo from './component/BuildInfo';
 import IconApp from './component/IconApp';
 import SplashScreen from './component/SplashScreen';
+import PDFDocument from './component/PDFDocument';
 
 const Android = () => {
   const [tabIndex, setTabIndex] = useState(0)
@@ -16,6 +17,8 @@ const Android = () => {
   const memoIconApp = useMemo(() => <IconApp />, []);
 
   const memoSplashScreen = useMemo(() => <SplashScreen />, []);
+
+  const memoPDFDocument = useMemo(() => <PDFDocument />, []);
 
   return (
     <div style={{ paddingBottom: 8, borderRadius: 12 }}>
@@ -34,6 +37,7 @@ const Android = () => {
 
       {(tabIndex === 2) && memoSplashScreen}
 
+      {(tabIndex === 3) && memoPDFDocument}
     </div>
   )
 
