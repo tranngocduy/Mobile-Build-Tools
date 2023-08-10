@@ -32,7 +32,7 @@ const ItemImage = ({ item, path, isMustSize }) => {
   }
 
   const _onLoad = () => {
-    const holder = document.getElementById(`holder-${item?.name}`);
+    const holder = document.getElementById(`holder-${path}/${item?.name}`);
     holder.ondragover = () => false;
     holder.ondrop = event => {
       event.preventDefault();
@@ -58,7 +58,7 @@ const ItemImage = ({ item, path, isMustSize }) => {
   return (
     <div>
       <Button style={{ margin: 0, padding: 0, borderRadius: 10 }} onClick={_openFolder}>
-        <div style={{ width, height, padding: 8, borderWidth: 1, borderColor: 'rgba(0,0,0,0.25)', borderStyle: 'dashed', borderRadius: 10 }} id={`holder-${item?.name}`}>
+        <div style={{ width, height, padding: 8, borderWidth: 1, borderColor: 'rgba(0,0,0,0.25)', borderStyle: 'dashed', borderRadius: 10 }} id={`holder-${path}/${item?.name}`}>
           <img src={`file://${path}/${item.name}?${Date.now()}`} style={{ width, height, backgroundColor: '#8DE1AF' }} onLoad={_onLoad} />
           <input type='file' hidden={true} accept='image/*' id='input-file-icon' onChange={_getIconFile} />
         </div>
