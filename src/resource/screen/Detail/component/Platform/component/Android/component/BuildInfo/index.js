@@ -5,10 +5,12 @@ import { SettingsOutlined } from '@mui/icons-material';
 
 import { useAppStore } from '@app-utils';
 
+import EditAndroid_BuildInfo from '@app-component/EditAndroid_BuildInfo';
+
 const BuildInfo = () => {
   const appPath = useAppStore(state => state.appPath);
 
-  const [appInfo, setAppInfo] = useState({ appName: '', versionCode: '', versionName: '', bundleId: '' })
+  const [appInfo, setAppInfo] = useState({ appName: '', versionCode: '', versionName: '', bundleID: '' })
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -29,9 +31,9 @@ const BuildInfo = () => {
     const appName = strings?.replace?.(/(<([^>]+)>)/gi, "")?.split('\n')?.filter?.(el => !!el)?.[0]?.trim?.();
     const versionCode = _getGradle(gradle, 'versionCode');
     const versionName = _getGradle(gradle, 'versionName');
-    const bundleId = _getGradle(gradle, 'applicationId');
+    const bundleID = _getGradle(gradle, 'applicationId');
 
-    setAppInfo({ appName, versionCode, versionName, bundleId });
+    setAppInfo({ appName, versionCode, versionName, bundleID });
   }
 
   useEffect(() => { _readData(); }, []);
@@ -47,9 +49,10 @@ const BuildInfo = () => {
         <div style={{ fontSize: 14 }}>Version Code: <span style={{ fontWeight: 'bold' }}>{appInfo.versionCode}</span></div>
         <div style={{ fontSize: 14 }}>Version Name: <span style={{ fontWeight: 'bold' }}>{appInfo.versionName}</span></div>
         <div style={{ fontSize: 14 }}>App Name: <span style={{ fontWeight: 'bold' }}>{appInfo.appName}</span></div>
-        <div style={{ fontSize: 14 }}>Bundle ID: <span style={{ fontWeight: 'bold' }}>{appInfo.bundleId}</span></div>
+        <div style={{ fontSize: 14 }}>Bundle ID: <span style={{ fontWeight: 'bold' }}>{appInfo.bundleID}</span></div>
       </div>
 
+      {!!openModal && <EditAndroid_BuildInfo appInfo={appInfo} appPath={appPath} readData={_readData} setModal={_setModal} />}
     </div>
   )
 
