@@ -32,9 +32,9 @@ const EnvConfig = () => {
   const _renderItem = (item, index) => {
     const [valueKey, valueItem] = getKeyValueItem(item);
     return (
-      <div style={{ display: 'flex', flex: 1, flexDirection: 'row', alignItems: 'center' }} key={index}>
-        <div style={{ fontSize: 14, color: '#38383D', width: 230 }}>{valueKey}:</div>
-        <span style={{ marginLeft: 4, fontSize: 14, color: '#38383D', fontWeight: 'bold' }}>{valueItem || '---'}</span>
+      <div style={{ display: 'flex', width: '50%', flexDirection: 'row', alignItems: 'center' }} key={index}>
+        <div style={{ fontSize: 14, color: '#38383D' }}>{valueKey}:</div>
+        <span style={{ marginLeft: 12, fontSize: 14, color: '#38383D', fontWeight: 'bold' }}>{valueItem || '---'}</span>
       </div>
     )
   }
@@ -42,7 +42,7 @@ const EnvConfig = () => {
   return (
     <div>
       <div style={{ display: 'flex', flex: 1, flexDirection: 'row' }}>
-        <div style={{ display: 'flex', flex: 1, flexDirection: 'column', rowGap: 24 }}>
+        <div style={{ display: 'flex', flex: 1, flexDirection: 'row', flexWrap: 'wrap', rowGap: 24 }}>
           {data?.map?.(_renderItem)}
         </div>
         <div style={{ marginTop: -12, marginRight: -8 }}>
