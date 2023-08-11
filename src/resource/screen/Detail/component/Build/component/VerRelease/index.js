@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 
-import { Button } from '@mui/material';
 import { PlayArrow } from '@mui/icons-material';
+import { Button, CircularProgress } from '@mui/material';
 
 import { useAppStore } from '@app-utils';
 
@@ -11,22 +11,26 @@ const VerRelease = ({ path }) => {
   const [isBuilding, setBuilding] = useState(false);
 
   const _buildApp = async () => {
+    setBuilding(true);
+
     const result = await window.electron.ipcRenderer.invoke(
       'osascript.runScript',
-      `cd ${appPath}; npm install -g yarn; yarn install; cd android; ./gradlew clean; ./gradlew bundleRelease; exit`
+      `cd ${appPath} && npx yarn install && cd android && ./gradlew clean && ./gradlew installRelease`
     );
 
-    console.log('result', result)
+    if (!result?.error)
+      await window.electron.ipcRenderer.invoke('shell.openPath', `${appPath}/android/app/build/outputs/apk/release/app-release.apk`);
+
+    setBuilding(false);
   }
 
   return (
     <div>
       <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', marginTop: 24 }}>
-        <Button variant="contained" onClick={_buildApp}>
-          <div>Build App</div><PlayArrow />
+        <Button variant="contained" disabled={!!isBuilding} onClick={_buildApp}>
+          {!isBuilding ? <Fragment>Build <PlayArrow /></Fragment> : <CircularProgress size={20} />}
         </Button>
       </div>
-      {!!isBuilding && <Terminal path={path} buildApp={_buildApp} />}
     </div>
   )
 
