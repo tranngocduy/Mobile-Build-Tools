@@ -9,7 +9,7 @@ export type Channels =
   'fs.renameSync' |
   'fs.unlinkSync' |
   'exec.runScript' |
-  'exec.killProcess' |
+  'osascript.runScript' |
   'shell.openPath';
 
 const electronHandler = {
