@@ -5,6 +5,7 @@ import { SettingsOutlined } from '@mui/icons-material';
 
 import { useAppStore } from '@app-utils';
 
+import InputNumber from '@app-component/InputNumber';
 import Android_EditBuildInfo from '@app-component/Android_EditBuildInfo';
 
 const BuildInfo = () => {
@@ -36,6 +37,22 @@ const BuildInfo = () => {
     setAppInfo({ appName, versionCode, versionName, bundleID });
   }
 
+  const _onChangeVersionCode = async value => {
+    await window.electron.ipcRenderer.invoke(
+      'exec.runScript',
+      `find ${appPath}/android/app/build.gradle -type f -print0 | xargs -0 perl -pi -w -e 's/versionCode ${appInfo.versionCode}/versionCode ${value}/g;'`
+    );
+    await _readData();
+  }
+
+  const _onChangeVersionName = async value => {
+    await window.electron.ipcRenderer.invoke(
+      'exec.runScript',
+      `find ${appPath}/android/app/build.gradle -type f -print0 | xargs -0 perl -pi -w -e 's/versionName "${appInfo.versionName}"/versionName "${value}"/g;'`
+    );
+    await _readData();
+  }
+
   useEffect(() => { _readData(); }, []);
 
   return (
@@ -46,8 +63,8 @@ const BuildInfo = () => {
       </div>
 
       <div style={{ display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ fontSize: 14 }}>Version Code: <span style={{ fontWeight: 'bold' }}>{appInfo.versionCode}</span></div>
-        <div style={{ fontSize: 14 }}>Version Name: <span style={{ fontWeight: 'bold' }}>{appInfo.versionName}</span></div>
+        <InputNumber title='Version Code' value={appInfo.versionCode} step={1} fixed={0} onChange={_onChangeVersionCode} />
+        <InputNumber title='Version Name' value={appInfo.versionName} step={0.1} fixed={1} onChange={_onChangeVersionName} />
         <div style={{ fontSize: 14 }}>App Name: <span style={{ fontWeight: 'bold' }}>{appInfo.appName}</span></div>
         <div style={{ fontSize: 14 }}>Bundle ID: <span style={{ fontWeight: 'bold' }}>{appInfo.bundleID}</span></div>
       </div>

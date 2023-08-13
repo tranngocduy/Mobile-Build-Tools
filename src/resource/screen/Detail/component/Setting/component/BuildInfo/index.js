@@ -38,7 +38,7 @@ const BuildInfo = () => {
 
     await window.electron.ipcRenderer.invoke(
       'exec.runScript',
-      `find ${path} -type f -print0 | xargs -0 perl -pi -w -e "s/${infoVersion}/APP_VERSION: ${(Number(value))}${endLine}/g;"`
+      `find ${path} -type f -print0 | xargs -0 perl -pi -w -e "s/${infoVersion}/APP_VERSION: ${value}${endLine}/g;"`
     );
 
     await _readData();
