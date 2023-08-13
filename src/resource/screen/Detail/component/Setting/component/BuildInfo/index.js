@@ -9,6 +9,8 @@ import InputNumber from '@app-component/InputNumber';
 const BuildInfo = () => {
   const appEnv = useAppStore(state => state.appEnv);
   const appPath = useAppStore(state => state.appPath);
+  const appPlatform = useAppStore(state => state.appPlatform);
+
   const path = `${appPath}/src/builder/env/env.${appEnv}.js`;
 
   const [data, setData] = useState(null);
@@ -26,6 +28,8 @@ const BuildInfo = () => {
     const appVersion = envFile?.[0]?.[1];
     const appIsManual = (isManual === 'true') ? true : (isManual === 'false') ? false : null;
     setData({ appVersion, appIsManual });
+
+    useAppStore.getState().updateIsManual(appIsManual);
   }
 
   const _updateVersion = async value => {
@@ -65,7 +69,28 @@ const BuildInfo = () => {
     await _readData();
   }
 
+  const _setManual = async () => {
+    if (appPlatform !== 'iOS') return;
+
+    let envFile = await window.electron.ipcRenderer.invoke('fs.readFileSync', path);
+    envFile = envFile?.split?.('\n')?.filter?.(el => el.includes?.(':'))?.filter(el => !el?.includes('{'));
+    envFile = envFile?.filter?.(el => !!el.includes('IS_MANUAL:'))?.map(el => el.trim?.());
+
+    const manualStatus = envFile?.[0];
+    const endLine = manualStatus.endsWith(',') ? ',' : '';
+
+    await window.electron.ipcRenderer.invoke(
+      'exec.runScript',
+      `find ${path} -type f -print0 | xargs -0 perl -pi -w -e "s/${manualStatus}/IS_MANUAL: false${endLine}/g;"`
+    );
+
+    await _readData();
+  }
+
   useEffect(() => { _readData(); }, [appEnv]);
+
+
+  useEffect(() => { _setManual(); }, [appPlatform]);
 
   return (
     <div style={{ display: 'flex', flex: 1, flexDirection: 'row', alignItems: 'center', columnGap: 48 }}>
@@ -73,7 +98,7 @@ const BuildInfo = () => {
 
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
         <span style={{ marginRight: 4, fontSize: 14, color: '#38383D' }}>Build App Manual:</span>
-        {!!data && <Checkbox checked={data.appIsManual} onChange={_updateManual} />}
+        {!!data && <Checkbox checked={data.appIsManual} onChange={_updateManual} disabled={(appPlatform === 'iOS')}/>}
       </div>
     </div>
   )

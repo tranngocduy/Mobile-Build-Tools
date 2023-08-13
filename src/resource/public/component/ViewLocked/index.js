@@ -1,35 +1,44 @@
-import React, { useState, useRef, Fragment } from 'react';
+import React, { useEffect } from 'react';
 
-import { Terminal } from 'xterm';
-import { PlayArrow, Pause } from '@mui/icons-material';
-import { Modal, Button, Paper, CircularProgress } from '@mui/material';
+import { Modal, Paper, CircularProgress } from '@mui/material';
 
-import 'xterm/css/xterm.css';
+const ViewLocked = ({ appPath, appPlatform, appIsManual, buildApp }) => {
 
-const ViewLocked = ({ appEnv, appPath, appPlatform, buildApp }) => {
-  const [isLoading, setLoading] = useState(false);
+  const _getBuildScript = async () => {
+    let scriptBuild = '';
+    let scripOpenFile = '';
+    if (appPlatform === 'IOS') {
 
-  const scriptBuild = useRef('');
-  const scripOpenFile = useRef('');
+    }
+    else if (appPlatform === 'Android') {
+      if (!appIsManual) {
+        scripOpenFile = `${appPath}/android/app/build/outputs/bundle/release/app-release.aab`;
+        scriptBuild = `cd ${appPath} && npx yarn install && cd android && ./gradlew clean && ./gradlew bundleRelease`;
+      }
+      else {
+        scripOpenFile = `${appPath}/android/app/build/outputs/apk/release/app-release.apk`;
+        scriptBuild = `cd ${appPath} && npx yarn install && cd android && ./gradlew clean && ./gradlew installRelease`;
+      }
+    }
 
-  const _getPlatform = () => {
+    const result = await window.electron.ipcRenderer.invoke('osascript.runScript', scriptBuild);
 
+    if (!result?.error) {
+      const isExit = await window.electron.ipcRenderer.invoke('shell.openPath', scripOpenFile);
+      if (!isExit) alert('Build Fail!');
+    }
+
+    buildApp();
   }
 
-  const _stop = () => buildApp();
+  useEffect(() => {
+    _getBuildScript();
+  }, []);
 
   return (
     <Modal open={true} style={{ display: 'flex', flex: 1, justifyContent: 'center', alignItems: 'center' }} >
-      <Paper elevation={3} style={{ display: 'flex', flexDirection: 'column', padding: 16, paddingRight: 16, backgroundColor: '#FFFFFF', borderRadius: 12 }}>
-        <div style={{ width: 800, height: 400, backgroundColor: '#000000' }}>
-          <div id="output-terminate"></div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: 24, columnGap: 24 }}>
-          <Button variant="contained" color="error" onClick={_stop}>Stop <Pause /></Button>
-          <Button variant="contained" color="primary" disabled={!!isLoading} onClick={_getPlatform}>
-            {!isLoading ? <Fragment>Build <PlayArrow /></Fragment> : <CircularProgress size={20} />}
-          </Button>
-        </div>
+      <Paper elevation={3} style={{ padding: 16, backgroundColor: '#FFFFFF' }}>
+        <CircularProgress />
       </Paper>
     </Modal>
   )

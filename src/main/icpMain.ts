@@ -6,10 +6,6 @@ import fixPath from 'fix-path';
 
 fixPath();
 
-let process_exec: any = null;
-
-const msgTemplate = ({ data, error }: any) => ({ data, error });
-
 ipcMain.handle('fs.readFileSync', async (event, filePath) => {
   const result = fs.readFileSync(filePath, 'utf-8');
   return result;
@@ -46,29 +42,20 @@ ipcMain.handle('shell.openPath', async (event, filePath) => {
   return true;
 });
 
-ipcMain.handle('exec.killProcess', async (event) => {
-  if (!!process_exec?.kill) process_exec.kill();
-  process_exec = null;
-});
+ipcMain.handle('osascript.runScript', async (event, script) => {
+  const bash = `
+  tell application "Terminal"
+    activate
+    do script "${script}"
+    delay 1
+    set W_ to windows of application "Terminal"
+    repeat until busy of (item 1 of W_) is false
+    end repeat
+  end tell
+  `;
 
-ipcMain.on('exec.runScript', async (event, script) => {
-  process_exec = exec(script);
-
-  if (!!process_exec?.stdout && !!process_exec?.stderr) {
-    process_exec.stdout.on('data', function (stdout: any) {
-      event.reply('exec.runScript', msgTemplate({ data: { stdout }, error: false }));
-    });
-
-    process_exec.stderr.on('data', function (stderr: any) {
-      event.reply('exec.runScript', msgTemplate({ data: { stderr }, error: false }));
-    });
-
-    process_exec.on('exit', () => {
-      event.reply('exec.runScript', msgTemplate({ data: { isExit: true }, error: false, }));
-    });
-
-    process_exec.on('error', () => {
-      event.reply('exec.runScript', msgTemplate({ data: {}, error: true }));
-    });
-  }
+  const result = await new Promise(resolve => {
+    exec(`osascript -e '${bash}'`, (error, stdout, stderr) => resolve({ error, stdout, stderr }));
+  });
+  return result;
 });

@@ -8,16 +8,13 @@ import { useAppStore } from '@app-utils';
 import ViewLocked from '@app-component/ViewLocked';
 
 const VerRelease = () => {
-  const appEnv = useAppStore(state => state.appEnv);
   const appPath = useAppStore(state => state.appPath);
   const appPlatform = useAppStore(state => state.appPlatform);
+  const appIsManual = useAppStore(state => state.appIsManual);
 
   const [isBuilding, setBuilding] = useState(false);
 
-  const _buildApp = () => {
-    setBuilding(!isBuilding);
-    window.electron.ipcRenderer.invoke('exec.killProcess');
-  }
+  const _buildApp = () => setBuilding(!isBuilding);
 
   return (
     <Paper style={{ padding: 12, borderRadius: 12 }}>
@@ -27,7 +24,7 @@ const VerRelease = () => {
         </Button>
       </div>
 
-      {!!isBuilding && <ViewLocked appEnv={appEnv} appPath={appPath} appPlatform={appPlatform} buildApp={_buildApp} />}
+      {!!isBuilding && <ViewLocked appPath={appPath} appPlatform={appPlatform} appIsManual={appIsManual} buildApp={_buildApp} />}
     </Paper>
   )
 
