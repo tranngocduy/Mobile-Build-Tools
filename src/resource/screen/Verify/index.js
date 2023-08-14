@@ -14,8 +14,6 @@ const Verify = () => {
   };
 
   const _openFile = async event => {
-    const KZ = `"name": "INVESTORZONE"`;
-
     const _filePath = event?.nativeEvent?.target?.files?.[0]?.path;
 
     if (!_filePath) return;
@@ -25,11 +23,13 @@ const Verify = () => {
       return;
     }
 
-    const result = await window.electron.ipcRenderer.invoke('fs.readFileSync', _filePath);
+    const projectPath = getFolderPath(_filePath);
+    const projectIOS = await window.electron.ipcRenderer.invoke('fs.readdir', `${projectPath}/ios`);
+    const projectName = projectIOS?.filter?.(el => !!el?.includes?.('.xcodeproj'))?.[0]?.split('.')?.[0];
 
-    if (!!result?.includes?.(KZ)) {
-      const projectPath = getFolderPath(_filePath);
+    if (['INVESTORZONE'].includes(projectName)) {
       useAppStore.getState().updatePath(projectPath);
+      useAppStore.getState().updateProjectName(projectName);
 
       navigate('/Detail');
       return;

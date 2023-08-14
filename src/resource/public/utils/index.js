@@ -28,9 +28,11 @@ export const useAppStore = create((set) => ({
   appPath: '',
   appPlatform: 'Android',
   appIsManual: null,
+  appProjectName: '',
 
   updateEnv: params => set(() => ({ appEnv: params })),
   updatePath: params => set(() => ({ appPath: params })),
   updatePlatform: params => set(() => ({ appPlatform: params })),
-  updateIsManual: params => set(() => ({ appIsManual: params }))
+  updateIsManual: params => set(() => ({ appIsManual: params })),
+  updateProjectName: params => set(() => ({ appProjectName: params }))
 }));

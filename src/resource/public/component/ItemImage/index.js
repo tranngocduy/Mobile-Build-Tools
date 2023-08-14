@@ -57,7 +57,7 @@ const ItemImage = ({ item, path, widthSize, isHideTitle, isMustMatch }) => {
   const _close = () => setSrc(null);
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Button style={{ margin: 0, padding: 0, borderRadius: 10 }} onClick={_openFolder}>
         <div style={{ width, height, padding: 8, borderWidth: 1, borderColor: 'rgba(0,0,0,0.25)', borderStyle: 'dashed', borderRadius: 10 }} id={`holder-${path}-${item?.name}`}>
           <img src={`file://${path}/${item.name}?${Date.now()}`} style={{ width, height, backgroundColor: '#8DE1AF' }} onLoad={_onLoad} />
