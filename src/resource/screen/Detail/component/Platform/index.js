@@ -4,6 +4,7 @@ import { Paper, FormControl, Select, MenuItem } from '@mui/material';
 
 import { useAppStore } from '@app-utils';
 
+import IOS from './component/IOS';
 import Android from './component/Android';
 
 const Platform = () => {
@@ -13,7 +14,9 @@ const Platform = () => {
     useAppStore.getState()?.updatePlatform?.(event.target.value);
   }
 
-  const memoAndroid = useMemo(() => <Android />, [])
+  const memoIOS = useMemo(() => <IOS />, []);
+
+  const memoAndroid = useMemo(() => <Android />, []);
 
   return (
     <Paper style={{ paddingRight: 16, paddingLeft: 16, paddingBottom: 16, borderRadius: 12 }}>
@@ -27,7 +30,8 @@ const Platform = () => {
         </FormControl>
       </div>
 
-      {appPlatform === 'Android' && memoAndroid}
+      {(appPlatform === 'Android') && memoAndroid}
+      {(appPlatform === 'iOS') && memoIOS}
     </Paper>
   )
 
