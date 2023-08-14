@@ -4,6 +4,7 @@ import { Box, Tabs, Tab } from '@mui/material';
 
 import BuildInfo from './component/BuildInfo';
 import IconApp from './component/IconApp';
+import SplashScreen from './component/SplashScreen';
 
 const IOS = () => {
   const [tabIndex, setTabIndex] = useState(0)
@@ -13,6 +14,8 @@ const IOS = () => {
   const memoBuildInfo = useMemo(() => <BuildInfo />, []);
 
   const memoIconApp = useMemo(() => <IconApp />, []);
+
+  const memoSplashScreen = useMemo(() => <SplashScreen />, []);
 
   return (
     <div style={{ paddingBottom: 8, borderRadius: 12 }}>
@@ -28,6 +31,8 @@ const IOS = () => {
       {(tabIndex === 0) && memoBuildInfo}
 
       {(tabIndex === 1) && memoIconApp}
+
+      {(tabIndex === 2) && memoSplashScreen}
 
     </div>
   )
