@@ -24,7 +24,6 @@ const IOS = () => {
           <Tab label="Build Info" />
           <Tab label="Icon App" />
           <Tab label="Splash Screen" />
-          <Tab label="PDF Document" />
         </Tabs>
       </Box>
 
