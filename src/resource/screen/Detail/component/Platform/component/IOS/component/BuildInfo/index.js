@@ -6,15 +6,21 @@ import { SettingsOutlined } from '@mui/icons-material';
 import { useAppStore } from '@app-utils';
 
 import InputNumber from '@app-component/InputNumber';
+import IOS_EditBuildInfo from '@app-component/IOS_EditBuildInfo';
 
 const BuildInfo = () => {
   const appPath = useAppStore(state => state.appPath);
   const appProjectName = useAppStore(state => state.appProjectName);
+  const InfoPath = `${appPath}/ios/${appProjectName}/Info.plist`;
   const path = `${appPath}/ios/${appProjectName}.xcodeproj/project.pbxproj`;
 
   const [appInfo, setAppInfo] = useState(null);
 
-  const _readData = async () => {
+  const [openModal, setOpenModal] = useState(false);
+
+  const _setModal = () => setOpenModal(!openModal);
+
+  const _loadData = async productName => {
     const result = await window.electron.ipcRenderer.invoke('fs.readFileSync', path);
     const indexes = [...result.matchAll(new RegExp('buildSettings = {', 'gi'))].map(a => a.index);
 
@@ -29,13 +35,24 @@ const BuildInfo = () => {
 
     const _version = indices?.[0]?.split('\n')?.filter(el => el.includes('MARKETING_VERSION ='))?.[0]?.replaceAll('\t', '');
     const _build = indices?.[0]?.split('\n')?.filter(el => el.includes('CURRENT_PROJECT_VERSION ='))?.[0]?.replaceAll('\t', '');
-    const _productName = indices?.[0]?.split('\n')?.filter(el => el.includes('PRODUCT_NAME ='))?.[0]?.replaceAll('\t', '');
+    const _appName = indices?.[0]?.split('\n')?.filter(el => el.includes('PRODUCT_NAME ='))?.[0]?.replaceAll('\t', '');
 
     const version = _version?.split?.('=')?.[1]?.trim()?.replaceAll(';', '');
     const build = _build?.split?.('=')?.[1]?.trim()?.replaceAll(';', '');
-    const productName = _productName?.split?.('=')?.[1]?.trim()?.replaceAll(';', '');
+    const appName = productName || _appName?.split?.('=')?.[1]?.trim()?.replaceAll(';', '')?.replaceAll('"', '');
 
-    setAppInfo({ version, build, productName });
+    setAppInfo({ version, build, appName });
+  }
+
+  const _readData = async () => {
+    const result = await window.electron.ipcRenderer.invoke('fs.readFileSync', InfoPath);
+
+    let productName = '';
+    const plist = result?.replace?.(/(<([^>]+)>)/gi, "")?.split('\n\t');
+    const _productName = plist[(plist.findIndex(el => el == 'CFBundleDisplayName') + 1)];
+    if (_productName !== '$(PRODUCT_NAME)') productName = _productName;
+
+    _loadData(productName);
   }
 
   const _onChangeVersion = async value => {
@@ -54,13 +71,7 @@ const BuildInfo = () => {
     await _readData();
   }
 
-  const _setModal = () => {
-
-  }
-
-  useEffect(() => {
-    _readData();
-  }, []);
+  useEffect(() => { _readData(); }, []);
 
   return (
     <div>
@@ -71,8 +82,10 @@ const BuildInfo = () => {
       <div style={{ display: 'flex', flex: 1, flexDirection: 'row', alignItems: 'center', columnGap: 86 }}>
         <InputNumber title='Version' value={appInfo?.version} step={1} fixed={1} onChange={_onChangeVersion} />
         <InputNumber title='Build' value={appInfo?.build} step={1} fixed={0} onChange={_onChangeBuild} />
-        <div style={{ fontSize: 14 }}>App Name: <span style={{ fontWeight: 'bold' }}>{appInfo?.productName}</span></div>
+        <div style={{ fontSize: 14 }}>App Name: <span style={{ fontWeight: 'bold' }}>{appInfo?.appName}</span></div>
       </div>
+
+      {!!openModal && <IOS_EditBuildInfo appInfo={appInfo} appPath={InfoPath} readData={_readData} setModal={_setModal} />}
     </div>
   )
 
