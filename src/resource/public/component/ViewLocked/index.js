@@ -7,8 +7,11 @@ const ViewLocked = ({ appPath, appPlatform, appIsManual, buildApp }) => {
   const _getBuildScript = async () => {
     let scriptBuild = '';
     let scripOpenFile = '';
-    if (appPlatform === 'IOS') {
 
+    const isIOS = (appPlatform === 'iOS');
+
+    if (!!isIOS) {
+      scriptBuild = `cd ${appPath} && npx yarn install && npx pod-install`;
     }
     else if (appPlatform === 'Android') {
       if (!appIsManual) {
@@ -23,7 +26,7 @@ const ViewLocked = ({ appPath, appPlatform, appIsManual, buildApp }) => {
 
     const result = await window.electron.ipcRenderer.invoke('osascript.runScript', scriptBuild);
 
-    if (!result?.error) {
+    if (!result?.error && !isIOS) {
       const isExit = await window.electron.ipcRenderer.invoke('shell.openPath', scripOpenFile);
       if (!isExit) alert('Build Fail!');
     }

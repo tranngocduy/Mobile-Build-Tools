@@ -34,12 +34,17 @@ ipcMain.handle('exec.runScript', async (event, script) => {
 });
 
 ipcMain.handle('shell.openPath', async (event, filePath) => {
-  const isExit = await fs.existsSync(filePath);
+  if (!!/^(http|https)/.test(filePath)) {
+    shell.openExternal(filePath);
+  }
+  else {
+    const isExit = await fs.existsSync(filePath);
 
-  if (!isExit) return false;
+    if (!isExit) return false;
 
-  shell.showItemInFolder(filePath);
-  return true;
+    shell.showItemInFolder(filePath);
+    return true;
+  }
 });
 
 ipcMain.handle('osascript.runScript', async (event, script) => {
