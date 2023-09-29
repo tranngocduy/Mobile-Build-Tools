@@ -10,7 +10,7 @@ import EditPDF from '@app-component/EditPDF';
 
 const PDFDocument = () => {
   const appPath = useAppStore(state => state.appPath);
-  const path = `${appPath}/android/app/src/main/assets/PDF`;
+  const path = `${appPath}/assets/PDF`;
 
   const [items, setItems] = useState(null);
   const [filePDF, setFilePDF] = useState(null);
@@ -52,7 +52,7 @@ const PDFDocument = () => {
       </div>
 
       {!!filePDF && <ViewPDF pathReadPDF={filePDF} setFilePDF={_setFilePDF} />}
-      {!!isShowModal && <EditPDF items={items} path={path} readData={_readData} setShowModal={_setShowModal} setFilePDF={_setFilePDF} />}
+      {!!isShowModal && <EditPDF items={items} path={path} appPath={appPath} readData={_readData} setShowModal={_setShowModal} setFilePDF={_setFilePDF} />}
     </div>
   )
 

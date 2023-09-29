@@ -14,7 +14,7 @@ const ViewPDF = ({ pathReadPDF, setFilePDF }) => {
           <IconButton onClick={_setFilePDF}><Close /></IconButton>
         </div>
 
-        <embed src={`file://${pathReadPDF}`} type="application/pdf" style={{ width: 800, height: 600 }} frameborder="0" />
+        <embed src={`file://${pathReadPDF}`} type="application/pdf" style={{ width: 800, height: 600 }} frameBorder="0" />
       </Paper>
     </Modal>
   )

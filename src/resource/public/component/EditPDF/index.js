@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { Modal, Paper, Button } from '@mui/material';
 
-const EditPDF = ({ items, path, readData, setShowModal, setFilePDF }) => {
+const EditPDF = ({ items, path, appPath, readData, setShowModal, setFilePDF }) => {
   const [data, setData] = useState([...items?.map(el => ({ name: el, path: null, isUpdate: false }))]);
 
   const _apply = async () => {
@@ -19,6 +19,8 @@ const EditPDF = ({ items, path, readData, setShowModal, setFilePDF }) => {
         await window.electron.ipcRenderer.invoke('fs.renameSync', `./src/resource/files/${_fileName}`, `./src/resource/files/${_fileName}`);
         await window.electron.ipcRenderer.invoke('exec.runScript', `cp -R ./src/resource/files/${_fileName} ${path}`);
         await window.electron.ipcRenderer.invoke('fs.unlinkSync', `./src/resource/files/${_fileName}`);
+
+        await window.electron.ipcRenderer.invoke('osascript.runScript', `cd ${appPath} && npx react-native-asset`);
       }
     }
 
