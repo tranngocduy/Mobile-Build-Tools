@@ -6,6 +6,7 @@ import EnvSelect from './component/EnvSelect';
 import BuildInfo from './component/BuildInfo';
 import EnvConfig from './component/EnvConfig';
 import ThemeUI from './component/ThemeUI';
+import PDF from './component/PDF';
 
 const Setting = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -20,6 +21,8 @@ const Setting = () => {
 
   const memoThemeUI = useMemo(() => <ThemeUI />, []);
 
+  const memoPDF = useMemo(() => <PDF />, []);
+
   return (
     <Paper style={{ paddingRight: 16, paddingLeft: 16, paddingBottom: 16, borderRadius: 12 }}>
       {memoEnvSelect}
@@ -29,6 +32,7 @@ const Setting = () => {
           <Tab label="Build Info" />
           <Tab label="Environment Config" />
           <Tab label="Theme UI" />
+          <Tab label="PDF Document" />
         </Tabs>
       </Box>
 
@@ -36,6 +40,7 @@ const Setting = () => {
         {(tabIndex === 0) && memoBuildInfo}
         {(tabIndex === 1) && memoEnvConfig}
         {(tabIndex === 2) && memoThemeUI}
+        {(tabIndex === 3) && memoPDF}
       </div>
     </Paper>
   )

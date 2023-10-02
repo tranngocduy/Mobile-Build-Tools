@@ -8,7 +8,7 @@ import { useAppStore } from '@app-utils';
 import ViewPDF from '@app-component/ViewPDF';
 import EditPDF from '@app-component/EditPDF';
 
-const PDFDocument = () => {
+const PDF = () => {
   const appPath = useAppStore(state => state.appPath);
   const path = `${appPath}/assets/PDF`;
 
@@ -42,9 +42,10 @@ const PDFDocument = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h4>PDF Document</h4>
-        <IconButton onClick={_setShowModal}><SettingsOutlined color='primary' /></IconButton>
+      <div style={{ display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+        <div style={{ marginTop: -12, marginRight: -8 }}>
+          <IconButton onClick={_setShowModal}><SettingsOutlined color='primary' /></IconButton>
+        </div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginLeft: -12 }}>
@@ -58,4 +59,4 @@ const PDFDocument = () => {
 
 }
 
-export default PDFDocument;
+export default PDF;
