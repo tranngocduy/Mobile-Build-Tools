@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 
 import { Modal, Button, Paper, TextField } from '@mui/material';
 
-const IOS_EditBuildInfo = ({ appInfo, path, readData, setModal }) => {
+const IOS_EditBuildInfo = ({ appInfo, path, loadData, setModal }) => {
   const appName = useRef(appInfo?.appName || '');
 
   const _onChangeAppName = e => (appName.current = e.nativeEvent.target.value.trim());
@@ -29,7 +29,7 @@ const IOS_EditBuildInfo = ({ appInfo, path, readData, setModal }) => {
       `find ${path} -type f -print0 | xargs -0 perl -pi -w -e 's/PRODUCT_NAME = ${currentProductName}/PRODUCT_NAME = ${newProductName}/g;'`
     );
 
-    await readData();
+    await loadData();
 
     setModal();
   }

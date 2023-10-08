@@ -11,7 +11,6 @@ import IOS_EditBuildInfo from '@app-component/IOS_EditBuildInfo';
 const BuildInfo = () => {
   const appPath = useAppStore(state => state.appPath);
   const appProjectName = useAppStore(state => state.appProjectName);
-  const InfoPath = `${appPath}/ios/${appProjectName}/Info.plist`;
   const path = `${appPath}/ios/${appProjectName}.xcodeproj/project.pbxproj`;
 
   const [appInfo, setAppInfo] = useState(null);
@@ -44,23 +43,12 @@ const BuildInfo = () => {
     setAppInfo({ version, build, appName });
   }
 
-  const _readData = async () => {
-    const result = await window.electron.ipcRenderer.invoke('fs.readFileSync', InfoPath);
-
-    let productName = '';
-    const plist = result?.replace?.(/(<([^>]+)>)/gi, "")?.split('\n\t');
-    const _productName = plist[(plist.findIndex(el => el == 'CFBundleDisplayName') + 1)];
-    if (_productName !== '$(PRODUCT_NAME)') productName = _productName;
-
-    _loadData(productName);
-  }
-
   const _onChangeVersion = async value => {
     await window.electron.ipcRenderer.invoke(
       'exec.runScript',
       `find ${path} -type f -print0 | xargs -0 perl -pi -w -e 's/MARKETING_VERSION = ${appInfo.version}/MARKETING_VERSION = ${value}/g;'`
     );
-    await _readData();
+    await _loadData();
   }
 
   const _onChangeBuild = async value => {
@@ -68,10 +56,10 @@ const BuildInfo = () => {
       'exec.runScript',
       `find ${path} -type f -print0 | xargs -0 perl -pi -w -e 's/CURRENT_PROJECT_VERSION = ${appInfo.build}/CURRENT_PROJECT_VERSION = ${value}/g;'`
     );
-    await _readData();
+    await _loadData();
   }
 
-  useEffect(() => { _readData(); }, []);
+  useEffect(() => { _loadData(); }, []);
 
   return (
     <div>
@@ -85,7 +73,7 @@ const BuildInfo = () => {
         <div style={{ fontSize: 14 }}>App Name: <span style={{ fontWeight: 'bold' }}>{appInfo?.appName}</span></div>
       </div>
 
-      {!!openModal && <IOS_EditBuildInfo appInfo={appInfo} appPath={InfoPath} readData={_readData} setModal={_setModal} />}
+      {!!openModal && <IOS_EditBuildInfo appInfo={appInfo} path={path} loadData={_loadData} setModal={_setModal} />}
     </div>
   )
 
