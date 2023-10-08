@@ -1,10 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
-import { Modal, Button, Paper, TextField } from '@mui/material';
+import { Modal, Button, Paper, CircularProgress, TextField } from '@mui/material';
 
 const Android_EditBuildInfo = ({ appInfo, appPath, readData, setModal }) => {
   const appName = useRef(appInfo?.appName || '');
   const bundleID = useRef(appInfo?.bundleID || '');
+
+  const [isLoading, setLoading] = useState(false);
 
   const _onChangeAppName = e => (appName.current = e.nativeEvent.target.value);
 
@@ -13,6 +15,8 @@ const Android_EditBuildInfo = ({ appInfo, appPath, readData, setModal }) => {
   const _apply = async () => {
     const _bundleID = bundleID.current?.replace?.('com.', '');
     const _applicationId = appInfo?.bundleID?.replace?.('com.', '');
+
+    setLoading(true);
 
     await window.electron.ipcRenderer.invoke(
       'exec.runScript',
@@ -25,6 +29,8 @@ const Android_EditBuildInfo = ({ appInfo, appPath, readData, setModal }) => {
     );
 
     await readData();
+
+    setLoading(false);
 
     setModal();
   }
@@ -39,7 +45,9 @@ const Android_EditBuildInfo = ({ appInfo, appPath, readData, setModal }) => {
 
         <div style={{ display: 'flex', flex: 1, flexDirection: 'row', columnGap: 12, marginTop: 24, justifyContent: 'flex-end' }}>
           <Button variant="outlined" onClick={setModal}>Cancel</Button>
-          <Button variant="contained" onClick={_apply}>Apply</Button>
+          <Button disabled={!!isLoading} variant="contained" onClick={_apply}>
+            {!isLoading ? 'Apply' : <CircularProgress size={20} />}
+          </Button>
         </div>
       </Paper>
     </Modal>
