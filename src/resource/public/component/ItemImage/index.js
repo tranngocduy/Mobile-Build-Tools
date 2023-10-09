@@ -48,7 +48,7 @@ const ItemImage = ({ item, path, widthSize, isHideTitle, isMustMatch }) => {
     await window.electron.ipcRenderer.invoke('exec.runScript', `cp -R ${filePath} ./src/resource/files`);
 
     await window.electron.ipcRenderer.invoke('fs.renameSync', `./src/resource/files/${src.file.name}`, `./src/resource/files/${item.name}`);
-    await window.electron.ipcRenderer.invoke('exec.runScript', `cp -R ./src/resource/files/${item.name} ${path}`);
+    await window.electron.ipcRenderer.invoke('exec.runScript', `cp -R ./src/resource/files/${item.name?.replaceAll(' ', '\\ ')} ${path}`);
     await window.electron.ipcRenderer.invoke('fs.unlinkSync', `./src/resource/files/${item.name}`);
 
     setSrc(null);
