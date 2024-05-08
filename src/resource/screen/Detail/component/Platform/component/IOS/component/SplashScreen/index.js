@@ -10,8 +10,8 @@ const SplashScreen = () => {
   const path = `${appPath}/ios/${appProjectName}/Images.xcassets/Image.imageset`;
 
   const _image = { name: 'Image.png', size: { width: 1500, height: 2668 } };
-  const _image1x = { name: 'Image 1.png', size: { width: 1500, height: 2668 } };
-  const _image2x = { name: 'Image 2.png', size: { width: 1500, height: 2668 } };
+  const _image1x = { name: 'Image-1.png', size: { width: 1500, height: 2668 } };
+  const _image2x = { name: 'Image-2.png', size: { width: 1500, height: 2668 } };
 
   return (
     <div>
