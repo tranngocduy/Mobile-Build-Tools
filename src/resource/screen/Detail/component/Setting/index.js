@@ -32,7 +32,7 @@ const Setting = () => {
           <Tab label="Build Info" />
           <Tab label="Environment Config" />
           <Tab label="Theme UI" />
-          <Tab label="PDF Document" />
+          {/* <Tab label="PDF Document" /> */}
         </Tabs>
       </Box>
 

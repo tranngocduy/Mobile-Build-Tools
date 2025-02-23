@@ -27,7 +27,7 @@ const Verify = () => {
     const projectIOS = await window.electron.ipcRenderer.invoke('fs.readdir', `${projectPath}/ios`);
     const projectName = projectIOS?.filter?.(el => !!el?.includes?.('.xcodeproj'))?.[0]?.split('.')?.[0];
 
-    if (['INVESTORZONE'].includes(projectName)) {
+    if (['KSM'].includes(projectName)) {
       useAppStore.getState().updatePath(projectPath);
       useAppStore.getState().updateProjectName(projectName);
 
